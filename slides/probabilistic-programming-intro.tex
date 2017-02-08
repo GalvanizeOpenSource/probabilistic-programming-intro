@@ -65,7 +65,7 @@
 }{}
 
 \hypersetup{colorlinks = true, linkcolor=darkblue, citecolor=darkblue,urlcolor=darkblue}
-\hypersetup{pdfauthor={A. Richards}, pdftitle={Projects}}
+\hypersetup{pdfauthor={A. Richards}, pdftitle={Intro to probabilistic programming}}
 
 \newcommand{\rd}{\textcolor{red}}
 \newcommand{\grn}{\textcolor{green}}
@@ -78,7 +78,15 @@
 %\usetheme{Berkeley}
 \usecolortheme{orchid}
 %\usecolortheme{seagull}
-\setbeamertemplate{blocks}[rounded][shadow=true]
+
+%% modify the font
+%\usepackage{fontspec}
+%setting a font
+%\setsansfont{TeX Gyre Adventor}
+%\usepackage{newcent}
+
+%% fix the section title for literature
+\renewcommand{\bibsection}{\subsubsection*{\bibname } }
 
 \title[Project teams]{Introduction to probabilistic programming \\ (with PyMC3)}
 \author[A. Richards]{A. Richards}
@@ -136,20 +144,40 @@
 \end{enumerate}
 }
 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \frame{ 
-% \frametitle{Notation}
-% \footnotesize
-% 
-% $X(s) : S\Rightarrow \Re$
-% 
-% \begin{itemize}
-%  \item Capital letters refer to random variables.
-%  \item Lowercase letters refer to specific realization.
-%  \item $P(X=x) = P(\{s\in S : X(s) = x\})$
-%  \item $X \sim XYZ(\alpha, \beta)$ means $X$ is distributed as, $XYZ$ with parameters $\alpha$ and $\beta$
-% \end{itemize}
-% }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{ 
+\frametitle{Bayesian Inference}
+\large \highlt{Degree of belief} \\ \ \\
+\footnotesize
+You are a skilled programmer, but bugs still slip into your code. After a particularly difficult implementation of an algorithm, you decide to test your code on a trivial example. It passes. You test the code on a harder problem. It passes once again. And it passes the next, \textit{even more difficult}, test too! You are \highlt{starting to believe} that there may be no bugs in this code...
+
+\begin{flushleft}
+\href{https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers}{Bayesian methods for hackers}
+\end{flushleft}
+
+This is \href{http://www.kdnuggets.com/2016/12/datascience-introduction-bayesian-inference.html}{a nice intro to Bayesian thinking done on kdnuggets (using PyMC3)}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{ 
+\frametitle{Some definaitons}
+\footnotesize
+\begin{equation}
+P(\theta|x) = \frac{P(x|\theta)P(\theta)}{P(x)}
+\end{equation}
+
+\begin{itemize}
+ \item \keywd{prior} - $P(\theta)$ - one's beliefs about a quantity before presented with evidence
+ \item \keywd{posterior} - $P(\theta|x)$ - probability of the parameters given the evidence
+ \item \keywd{likelihood} - $P(x|\theta)$  - probability of the evidence given the parameters
+ \item \keywd{normalizing constant} - $P(x)$
+\end{itemize}
+
+\begin{itemize}
+ \item $P(\theta)$: This big, complex code likely has a bug in it. 
+ \item $P(\theta|X)$: The code passed all X tests; there still might be a bug, but it is less likely now.
+\end{itemize}
+}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -159,21 +187,86 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile]
-\tiny
-\begin{code}
-pip install --process-dependency-links git+https://github.com/pymc-devs/pymc3
-\end{code}
+\frametitle{PyMC3}
 \footnotesize
+\begin{itemize}
+ \item Developed by John Salvatier, Thomas Wiecki, and Christopher Fonnesbeck \citep{Salvatier16}
+ \item Comes with \href{https://github.com/pymc-devs/pymc3/tree/master/pymc3/examples}{loads of good examples}
+ \item API is is not backwards compartible with models specified in PyMC2
+\end{itemize}
+\begin{code}
+import pymc3 as pm
+
+n,h,alpha,beta,niter = 100,61,2,2,1000
+
+with pm.Model() as model: # context management
+    # define priors and likelihood
+    p = pm.Beta('p', alpha=alpha, beta=beta)
+    y = pm.Binomial('y', n=n, p=p, observed=h)
+
+    # inference
+    start = pm.find_MAP() # initial state for MCMC
+    step = pm.Metropolis() # Have a choice of samplers
+    trace = pm.sample(niter, step, start)
+\end{code}
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{
+\frametitle{Markov chain Monte Carlo (MCMC)}
+\footnotesize
+\keywd{MCMC}
+\begin{itemize}
+ \item It is an family of algorithms for obtaining a sequence of random samples from a probability distribution for which direct sampling is difficult.
+ \item The sequence can then be used to approximate the distribution
+ \item It allows for inference on complex models
+\end{itemize}
 
+A particularly useful class of MCMC, known as Hamliltonian Monte Carlo, requires \href{https://en.wikipedia.org/wiki/Gradient}{gradient} information which is often not readily available so PyMC3 uses Theano to get around this problem.  Another class of MCMC that has recently made this whole field a lot more interesting is the No-U-turn sampler (NUTS) because there are \highlt{self-tuning strategies} \citep{Hoffman14}.
+\\ \ \\
+One of the really nice things about probabilistic programming is that \highlt{you do not have to know how inference is performed}, but it can be useful.  
+
+\begin{itemize}
+ \item \href{http://twiecki.github.io/blog/2015/11/10/mcmc-sampling/}{MCMC for Dummies}
+ \item \href{https://arxiv.org/pdf/1206.1901.pdf}{More on Hamliltonian MCMC (Not for dummies)}
+\end{itemize}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]
+\begin{block}{PyMC3 is an improvement over PyMC2}
+\begin{itemize}
+ \item Intuitive model specification syntax e.g. \\
+ \begin{equation*}
+ x \sim N(0,1) \textrm{ becomes } x = \textrm{Normal}(0,1)
+ \end{equation*}
+ \item Powerful sampling algorithms such as the \href{http://arxiv.org/abs/1111.4246}{No U-Turn Sampler}
+ \item \highlt{Variational inference}: \href{http://arxiv.org/abs/1506.03431}{ADVI} for fast approximate posterior estimation as well as \highlt{mini-batch} ADVI for large data sets.
+ \item Relies on \href{http://deeplearning.net/software/theano}{Theano} which provides:
+ \begin{itemize}
+ \item Numpy broadcasting and advanced indexing
+ \item Linear algebra operators
+ \item Computation optimization and dynamic C compilation
+ \item Simple extensibility
+ \end{itemize}
+ \item Transparent support for \highlt{missing value imputation}
+\end{itemize}
+\end{block}
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \frame{ 
-\frametitle{woot}
+\frametitle{Getting started}
 \footnotesize
+
+\begin{block}{}
+ We will be using Probabilistic Programming to perform automatic Bayesian inference on user-defined probabilistic models
+\end{block}
+
 \begin{itemize}
- \item 
+ \item \href{https://github.com/pymc-devs/pymc3}{PyMC3 repo}
+ \item \href{http://pymc-devs.github.io/pymc3/notebooks/getting_started.html}{Getting started guide}
+ \item \href{https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers}{Bayesian methods for hackers}
 \end{itemize}
 }
 
@@ -238,6 +331,10 @@ pip install --process-dependency-links git+https://github.com/pymc-devs/pymc3
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \frame{ 
 \frametitle{Recommenders}
+\begin{block}{The example}
+ We will be walking through the \href{https://pymc-devs.github.io/pymc3/notebooks/pmf-pymc.html}{PyMC3 PMF example}
+\end{block}
+
 \begin{itemize}
  \item 
 \end{itemize}
@@ -251,129 +348,31 @@ pip install --process-dependency-links git+https://github.com/pymc-devs/pymc3
 \end{itemize}
 }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{ 
+\frametitle{Where to go from here}
+\footnotesize
 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \frame{   
-% \frametitle{The essential data science toolkit}
-% \begin{block}{Subject area mastery}
-%  \begin{itemize}
-%     \item SQL and noSQL databases
-%     \item Associative statistics and hypothesis testing
-%     \item Unsupervised and supervised learning
-%     \item Data visualization
-%     \item Data products
-%     \end{itemize}
-% \end{block}
-% 
-% \begin{block}{Programming mastery}
-%  Expert level proficiency in language that is useful for data science 
-% \end{block}
-% }
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \frame{   
-% \frametitle{Why Python?}
-% \begin{block}{}
-% \begin{itemize}
-%     \item There are many languages of data science (Python, R,...)
-%     \item Ecosystem (NumPy, matplotlib, pandas)
-%     \item Readability, Flexibility
-%     \item Glue language
-%     \item Object-oriented and functional
-%     \end{itemize}
-% \end{block}
-% }
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \section{Demos}
-% \subsection{}
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \frame{   
-% \frametitle{Demo 1}
-% \begin{block}{}
-%  Tutorial Example
-% \end{block}
-% }
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \frame{   
-% \frametitle{Demo 2}
-% \begin{block}{}
-%  Advanced Example
-% \end{block}
-% }
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \section{Discussion and Wrap-up}
-% \subsection{}
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \frame{   
-% \frametitle{Overview}
-% \begin{block}{}
-%  \begin{enumerate}
-%     \item Version control based workflow
-%     \item Jupyter notebook
-%     \item Data types (lists, arrays, data frames)
-%     \item EDA - working with data frames, plotting
-%     \item Working with text (latent topics, clustering)
-%     \item Data visualization
-%     \end{enumerate}
-% \end{block}
-% }
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \frame{   
-% \footnotesize
-% \begin{table}
-% \begin{tabular}{|c|c|}
-% \hline
-% Week& Topic \\
-% \hline
-% 0   & Python workshop \\
-% 1   & Programming and SQL \\
-% 2   & Probability and Statistics \\
-% 3   & Linear Models \\
-% 4   & Supervised Learning \\
-% 5   & NLP, Business analytics \\
-% 6   & Unsupervised Learning \\
-% 7   & Break Week \\
-% 8   & Big Data / Data Engineering \\
-% 9   & Special Topics / Case Studies \\
-% 9   & Project \\
-% 10  & Project \\
-% 11  & Project \\
-% 12  & Career services and Special topics \\
-% \hline
-% \end{tabular}
-% \end{table}
-% 
-% There are also part-time courses and free meet-ups...
-% }
-% 
-% % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % \frame{   
-% % \frametitle{Resources and Contacts}
-% % \begin{block}{}
-% %  \begin{itemize}
-% %     \item 
-% %     \item
-% %     \item
-% %     \end{itemize}
-% % \end{block}
-% % 
-% % \begin{block}{blah}
-% %  blah blah
-% % \end{block}
-% % }
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % \frame[allowframebreaks]{  
-% % \frametitle{References}
-% % \begin{tiny} \bibliography{../galvanize.bib}
-% % \bibliographystyle{apalike}         % Style BST file
-% % \end{tiny}
-% % }
+Examples, examples, examples...
+\begin{itemize}
+ \item \href{https://github.com/pymc-devs/pymc3}{PyMC3 repo}
+ \item \href{http://pymc-devs.github.io/pymc3/notebooks/getting_started.html}{Getting started guide}
+ \item \href{https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers}{Bayesian methods 
+for hackers}
+  \item \href{http://twiecki.github.io}{Blog by Thomas Wiecki}
+  \item \href{http://www.amazon.com/Doing-Bayesian-Analysis-Second-Edition/dp/0124058884/ref=dp_ob_title_bk}{Doing Bayesian Data Analysis by John Kruschke}
+  \item \href{https://github.com/markdregan/Bayesian-Modelling-in-Python}{Resource by Mark Dregan}
+\end{itemize}
+
+There is also \href{https://github.com/stan-dev/example-models/wiki}{PyStan} (\href{http://www.stat.columbia.edu/~gelman/research/unpublished/stan-resubmit-JSS1293.pdf}{Stan paper})
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame[allowframebreaks]{  
+\frametitle{References}
+\begin{tiny} \bibliography{pp.bib}
+\bibliographystyle{apalike}         % Style BST file
+\end{tiny}
+}
 
 \end{document}
