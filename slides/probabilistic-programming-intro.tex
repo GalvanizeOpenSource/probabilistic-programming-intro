@@ -1,0 +1,379 @@
+%% beamer packages
+% other themes: AnnArbor, Antibes, Bergen, Berkeley, Berlin, Boadilla, boxes, 
+% CambridgeUS, Darmstadt, Dresden, Frankfurt, Goettingen, Hannover, Ilmenau,
+%JuanLesPins, Luebeck, Madrid, Malmoe, Marburg, Montpellier, PaloAlto,
+%Pittsburgh, Rochester, Singapore, Szeged, Warsaw
+% other colors: albatross, beaver, crane, default, dolphin, dove, fly, lily, 
+%orchid, rose, seagull, seahorse, sidebartab, structure, whale, wolverine,
+%beetle
+
+%\documentclass[xcolor=dvipsnames]{beamer}
+\documentclass[table,dvipsnames]{beamer}
+\usepackage{beamerthemesplit}
+\usepackage{bm,amsmath,marvosym}
+\usepackage{listings,color}%xcolor
+\usepackage[ngerman]{babel}
+\usepackage{natbib}
+\usepackage[utf8]{inputenc}
+\definecolor{shadecolor}{rgb}{.9, .9, .9}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.5}
+\definecolor{myorange}{cmyk}{0,0.7,1,0}
+\definecolor{mypurple}{cmyk}{0.3, 0.9, 0.0, 0.2}
+
+% make a checkmark
+\usepackage{tikz}
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;} 
+
+% dot product
+\usetikzlibrary{arrows,positioning}
+\tikzset{
+    %Define standard arrow tip
+    >=stealth',
+    % Define arrow style
+    pil/.style={->,thick}
+}
+
+% math stuff
+\newcommand{\argmin}{\operatornamewithlimits{argmin}}
+
+\lstnewenvironment{code}{
+    \lstset{backgroundcolor=\color{shadecolor},
+        showstringspaces=false,
+        language=python,
+        frame=single,
+        framerule=0pt,
+        keepspaces=true,
+        breaklines=true,
+        basicstyle=\ttfamily,
+        keywordstyle=\bfseries,
+        basicstyle=\ttfamily\scriptsize,
+        keywordstyle=\color{blue}\ttfamily,
+        stringstyle=\color{red}\ttfamily,
+        commentstyle=\color{green}\ttfamily,
+        columns=fullflexible
+    }
+}{}
+
+\lstnewenvironment{codeout}{
+    \lstset{backgroundcolor=\color{shadecolor},
+        frame=single,
+        framerule=0pt,
+        breaklines=true,
+        basicstyle=\ttfamily\scriptsize,
+        columns=fullflexible
+    }
+}{}
+
+\hypersetup{colorlinks = true, linkcolor=darkblue, citecolor=darkblue,urlcolor=darkblue}
+\hypersetup{pdfauthor={A. Richards}, pdftitle={Projects}}
+
+\newcommand{\rd}{\textcolor{red}}
+\newcommand{\grn}{\textcolor{green}}
+\newcommand{\keywd}{\textcolor{myorange}}
+\newcommand{\highlt}{\textcolor{NavyBlue}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\def\ci{\perp\!\!\!\perp}
+% set beamer theme and color
+\usetheme{Frankfurt}
+%\usetheme{Berkeley}
+\usecolortheme{orchid}
+%\usecolortheme{seagull}
+\setbeamertemplate{blocks}[rounded][shadow=true]
+
+\title[Project teams]{Introduction to probabilistic programming \\ (with PyMC3)}
+\author[A. Richards]{A. Richards}
+\institute{}
+\date[]{02.08.2017}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\frame{\titlepage}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{
+\footnotesize
+\tableofcontents
+\normalsize
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{   
+\frametitle{Probabilistic programming}
+\footnotesize
+\begin{block}{A probabilistic programming language makes it easy to:}
+ \begin{enumerate}
+  \item write out complex probability models
+  \item And subsequently solve these models automatically.
+ \end{enumerate}
+ \end{block}
+
+\begin{block}{Generally this is accomplished by:}
+ \begin{enumerate}
+  \item Random variables are handled as a \href{https://en.wikipedia.org/wiki/Language\_primitive}{primitive}
+  \item Inference is handled behind the scenes
+  \item Memory and processor management is abstracted away
+ \end{enumerate}
+ \end{block} 
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{ 
+\frametitle{The pros and the cons}
+\footnotesize
+\textbf{Why you might want to use probabilistic programming}
+\begin{enumerate}
+ \item \keywd{Customization} - We can create models that have built-in hypothesis tests
+ \item \keywd{Propagation of uncertainty} - There is a degree of belief associated prediction and estimation
+ \item \keywd{Intuition} - The models are essentially 'white-box' which provides insight into our data
+\end{enumerate}
+\textbf{Why you might \highlt{NOT} want use out probabilistic programming}
+\begin{enumerate}
+ \item \keywd{Deep dive} - Many of the online examples will assume a fairly deep understanding of statistics
+ \item \keywd{Overhead} - Computational overhead might make it difficult to be production ready
+ \item \keywd{Sometimes simple is enough} - The ability to customize models in almost a plug-n-play manner has to come with some cost. 
+\end{enumerate}
+}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \frame{ 
+% \frametitle{Notation}
+% \footnotesize
+% 
+% $X(s) : S\Rightarrow \Re$
+% 
+% \begin{itemize}
+%  \item Capital letters refer to random variables.
+%  \item Lowercase letters refer to specific realization.
+%  \item $P(X=x) = P(\{s\in S : X(s) = x\})$
+%  \item $X \sim XYZ(\alpha, \beta)$ means $X$ is distributed as, $XYZ$ with parameters $\alpha$ and $\beta$
+% \end{itemize}
+% }
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{PyMC3}
+\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]
+\tiny
+\begin{code}
+pip install --process-dependency-links git+https://github.com/pymc-devs/pymc3
+\end{code}
+\footnotesize
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{ 
+\frametitle{woot}
+\footnotesize
+\begin{itemize}
+ \item 
+\end{itemize}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{ 
+\frametitle{woot}
+\footnotesize
+\begin{itemize}
+ \item 
+\end{itemize}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Warm-up}
+\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{ 
+\frametitle{coin flip example}
+\footnotesize
+\begin{itemize}
+ \item 
+\end{itemize}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{ 
+\frametitle{woot}
+\begin{itemize}
+ \item 
+\end{itemize}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{PMF}
+\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{ 
+\frametitle{Recommenders}
+\begin{itemize}
+ \item 
+\end{itemize}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{ 
+\frametitle{woot}
+\begin{itemize}
+ \item 
+\end{itemize}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Cool down}
+\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{ 
+\frametitle{Recommenders}
+\begin{itemize}
+ \item 
+\end{itemize}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{ 
+\frametitle{woot}
+\begin{itemize}
+ \item 
+\end{itemize}
+}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \frame{   
+% \frametitle{The essential data science toolkit}
+% \begin{block}{Subject area mastery}
+%  \begin{itemize}
+%     \item SQL and noSQL databases
+%     \item Associative statistics and hypothesis testing
+%     \item Unsupervised and supervised learning
+%     \item Data visualization
+%     \item Data products
+%     \end{itemize}
+% \end{block}
+% 
+% \begin{block}{Programming mastery}
+%  Expert level proficiency in language that is useful for data science 
+% \end{block}
+% }
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \frame{   
+% \frametitle{Why Python?}
+% \begin{block}{}
+% \begin{itemize}
+%     \item There are many languages of data science (Python, R,...)
+%     \item Ecosystem (NumPy, matplotlib, pandas)
+%     \item Readability, Flexibility
+%     \item Glue language
+%     \item Object-oriented and functional
+%     \end{itemize}
+% \end{block}
+% }
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{Demos}
+% \subsection{}
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \frame{   
+% \frametitle{Demo 1}
+% \begin{block}{}
+%  Tutorial Example
+% \end{block}
+% }
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \frame{   
+% \frametitle{Demo 2}
+% \begin{block}{}
+%  Advanced Example
+% \end{block}
+% }
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{Discussion and Wrap-up}
+% \subsection{}
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \frame{   
+% \frametitle{Overview}
+% \begin{block}{}
+%  \begin{enumerate}
+%     \item Version control based workflow
+%     \item Jupyter notebook
+%     \item Data types (lists, arrays, data frames)
+%     \item EDA - working with data frames, plotting
+%     \item Working with text (latent topics, clustering)
+%     \item Data visualization
+%     \end{enumerate}
+% \end{block}
+% }
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \frame{   
+% \footnotesize
+% \begin{table}
+% \begin{tabular}{|c|c|}
+% \hline
+% Week& Topic \\
+% \hline
+% 0   & Python workshop \\
+% 1   & Programming and SQL \\
+% 2   & Probability and Statistics \\
+% 3   & Linear Models \\
+% 4   & Supervised Learning \\
+% 5   & NLP, Business analytics \\
+% 6   & Unsupervised Learning \\
+% 7   & Break Week \\
+% 8   & Big Data / Data Engineering \\
+% 9   & Special Topics / Case Studies \\
+% 9   & Project \\
+% 10  & Project \\
+% 11  & Project \\
+% 12  & Career services and Special topics \\
+% \hline
+% \end{tabular}
+% \end{table}
+% 
+% There are also part-time courses and free meet-ups...
+% }
+% 
+% % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % \frame{   
+% % \frametitle{Resources and Contacts}
+% % \begin{block}{}
+% %  \begin{itemize}
+% %     \item 
+% %     \item
+% %     \item
+% %     \end{itemize}
+% % \end{block}
+% % 
+% % \begin{block}{blah}
+% %  blah blah
+% % \end{block}
+% % }
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % \frame[allowframebreaks]{  
+% % \frametitle{References}
+% % \begin{tiny} \bibliography{../galvanize.bib}
+% % \bibliographystyle{apalike}         % Style BST file
+% % \end{tiny}
+% % }
+
+\end{document}
