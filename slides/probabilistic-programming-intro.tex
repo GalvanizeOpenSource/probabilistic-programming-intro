@@ -160,7 +160,7 @@ This is \href{http://www.kdnuggets.com/2016/12/datascience-introduction-bayesian
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \frame{ 
-\frametitle{Some definaitons}
+\frametitle{Some terminology}
 \footnotesize
 \begin{equation}
 P(\theta|x) = \frac{P(x|\theta)P(\theta)}{P(x)}
@@ -179,9 +179,15 @@ P(\theta|x) = \frac{P(x|\theta)P(\theta)}{P(x)}
 \end{itemize}
 }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{
+\begin{center}
+\includegraphics[scale=0.32]{coin_flip.png}
+\end{center}
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{PyMC3}
+\section{Warm up}
 \subsection{}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -189,26 +195,23 @@ P(\theta|x) = \frac{P(x|\theta)P(\theta)}{P(x)}
 \begin{frame}[fragile]
 \frametitle{PyMC3}
 \footnotesize
+\begin{code}
+import pymc3 as pm
+\end{code}
+
 \begin{itemize}
  \item Developed by John Salvatier, Thomas Wiecki, and Christopher Fonnesbeck \citep{Salvatier16}
  \item Comes with \href{https://github.com/pymc-devs/pymc3/tree/master/pymc3/examples}{loads of good examples}
  \item API is is not backwards compartible with models specified in PyMC2
+ \item Can still be run in Python2.7+.
 \end{itemize}
-\begin{code}
-import pymc3 as pm
 
-n,h,alpha,beta,niter = 100,61,2,2,1000
-
-with pm.Model() as model: # context management
-    # define priors and likelihood
-    p = pm.Beta('p', alpha=alpha, beta=beta)
-    y = pm.Binomial('y', n=n, p=p, observed=h)
-
-    # inference
-    start = pm.find_MAP() # initial state for MCMC
-    step = pm.Metropolis() # Have a choice of samplers
-    trace = pm.sample(niter, step, start)
-\end{code}
+\highlt{Basic workflow}
+\begin{enumerate}
+ \item Define hyperpriors
+ \item Open a model context
+ \item Perform inference
+\end{enumerate}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -222,13 +225,14 @@ with pm.Model() as model: # context management
  \item It allows for inference on complex models
 \end{itemize}
 
-A particularly useful class of MCMC, known as Hamliltonian Monte Carlo, requires \href{https://en.wikipedia.org/wiki/Gradient}{gradient} information which is often not readily available so PyMC3 uses Theano to get around this problem.  Another class of MCMC that has recently made this whole field a lot more interesting is the No-U-turn sampler (NUTS) because there are \highlt{self-tuning strategies} \citep{Hoffman14}.
+A particularly useful class of MCMC, known as Hamliltonian Monte Carlo, requires \href{https://en.wikipedia.org/wiki/Gradient}{gradient} information which is often not readily available so PyMC3 uses Theano to get around this problem.  Something that has recently made this whole field a lot more interesting is the No-U-turn sampler (NUTS) because there are \highlt{self-tuning strategies} \citep{Hoffman14}.
 \\ \ \\
 One of the really nice things about probabilistic programming is that \highlt{you do not have to know how inference is performed}, but it can be useful.  
 
 \begin{itemize}
  \item \href{http://twiecki.github.io/blog/2015/11/10/mcmc-sampling/}{MCMC for Dummies}
  \item \href{https://arxiv.org/pdf/1206.1901.pdf}{More on Hamliltonian MCMC (Not for dummies)}
+ \item \href{http://twiecki.github.io/blog/2014/01/02/visualizing-mcmc/}{How to animate MCMC (for everyone)}
 \end{itemize}
 }
 
@@ -260,48 +264,78 @@ One of the really nice things about probabilistic programming is that \highlt{yo
 \footnotesize
 
 \begin{block}{}
- We will be using Probabilistic Programming to perform automatic Bayesian inference on user-defined probabilistic models
+ We will be using probabilistic programming with PyMC3 to perform automatic Bayesian inference on user-defined probabilistic models
 \end{block}
-
+\vspace{0.5cm	}
+These are some of the best getting started resources out there
 \begin{itemize}
  \item \href{https://github.com/pymc-devs/pymc3}{PyMC3 repo}
  \item \href{http://pymc-devs.github.io/pymc3/notebooks/getting_started.html}{Getting started guide}
  \item \href{https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers}{Bayesian methods for hackers}
 \end{itemize}
+\vspace{0.5cm}
+Now that we have an intuition for Bayesian inference and a general idea of what to expect with PyMC3 lets dive in.
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\frame{ 
-\frametitle{woot}
+\begin{frame}[fragile]
+\frametitle{PyMC3}
 \footnotesize
-\begin{itemize}
- \item 
-\end{itemize}
+\begin{code}
+import pymc3 as pm
+
+n,h,alpha,beta,niter = 100,61,2,2,1000
+
+# context management
+with pm.Model() as model: 
+    p = pm.Beta('p', alpha=alpha, beta=beta)
+    y = pm.Binomial('y', n=n, p=p, observed=h)
+
+    start = pm.find_MAP()
+    step = pm.Metropolis()
+    trace = pm.sample(niter, step, start)
+\end{code}
+
+Data $\rightarrow$ Model context $\rightarrow$ Priors $\rightarrow$ Likelihood $\rightarrow$ Sampler $\rightarrow$ Inference
+\vspace{0.5cm}
+\\ \noindent To the notebooks!
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{   
+\frametitle{Where are we...}
+\begin{block}{}
+ \begin{itemize}
+  \item[\checkmark] Overview
+  \item[\checkmark] Coin-flip example
+  \item[\checkmark] Estimating the mean and standard deviation of a Normal
+  \item[\checkmark] Switchpoint analysis of text messages
+  \end{itemize}
+\end{block}
 }
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Warm-up}
-\subsection{}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]
+\frametitle{There are more examples..}
+\begin{block}{}
+ But what about linear regression--the classical example??
+\end{block}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\frame{ 
-\frametitle{coin flip example}
-\footnotesize
-\begin{itemize}
- \item 
-\end{itemize}
-}
+The linear regression example \href{http://pymc-devs.github.io/pymc3/notebooks/getting_started.html}{is well explained in the docs}, but I did want to point out that we now have access to GLM style formulations in PyMC3.
+\vspace{1cm}
+\begin{code}
+import pymc3 as pm
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\frame{ 
-\frametitle{woot}
-\begin{itemize}
- \item 
-\end{itemize}
-}
+...
 
+data = dict(x=x, y=y)
+
+with pm.Model() as model:
+    pm.glm.glm('y ~ x', data)
+    step = pm.NUTS()
+    trace = pm.sample(2000, step, progressbar=True)
+\end{code}    
+\end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{PMF}
 \subsection{}
@@ -310,17 +344,78 @@ One of the really nice things about probabilistic programming is that \highlt{yo
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \frame{ 
 \frametitle{Recommenders}
+
+\begin{table}
+\begin{center}
+What will a user \textit{buy}, \textit{click}, \textit{like}...
+\end{center}
+\ \\ \ \\
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+\hline
+        & A  &  B & C & D & E & F & G & ... \\
+\hline        
+Frodo   & 1  &  ? & 2 & 1 & 1 & 4 & 1 & ... \\
+Sam     & ?  &  ? & 1 & 3 & ? & 3 & 1 & ... \\
+Merry   & ?  &  ? & 1 & 1 & ? & 1 & 1 & ... \\
+Gimli   & 1  &  1 & ? & 1 & ? & 1 & ? & ... \\
+Legolas & 1  &  1 & ? & 1 & ? & 1 & ? & ... \\
+\hline
+\end{tabular}
+\end{table}
+
 \begin{itemize}
- \item 
+ \item Ebay and Amazon who recommends items for purchase
+ \item Movies, dating services, social network feeds, recipes, jokes, hikes, ...
 \end{itemize}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \frame{ 
-\frametitle{woot}
+\footnotesize
+
+There are numerous types of recommender systems
 \begin{itemize}
- \item 
+ \item \keywd{Popularity} - Most viewed, most well-liked, not customized to users
+ \item \keywd{User-User} - Recommend items liked by users with similar results
+ \item \keywd{Item-Item} - Recommend items similar to what the current user rated favorably
+ \item \keywd{Matrix-Factorization} - Estimate a users underlying preferences
 \end{itemize}
+-------------------------------------------------------------------------------- \\
+Two of the most commonly implemented varieties are:
+\begin{itemize}
+ \item \keywd{collaborative filtering} - Imagine that user 1 and user 2 both like the same 4 science fiction novels we can then infer that if user 1 also likes another similar novel then user 2 will have a good chance of also liking it.
+ \item \keywd{Content-based recommender} - These systems also make use of extra features associated with the user
+\end{itemize}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{ 
+\frametitle{Probabilistic matrix factorization (PMF)}
+\footnotesize
+\begin{itemize}
+ \item Probabilistic approach to the collaborative filtering problem that takes a Bayesian perspective \citep{Salakhutdinov08}.
+ \item The ratings $R$ are modeled as draws from a Gaussian distribution
+ \item We use precision $\alpha$, a fixed parameter, that reflects the uncertainty of the estimations; the normal distribution is commonly reparameterized in terms of precision, which is the inverse of the variance.
+ \item small precision parameters help control the growth of our latent parameters
+ \end{itemize}
+The following implementation is modified from the \href{https://pymc-devs.github.io/pymc3/notebooks/pmf-pymc.html}{example in the PyMC3 documentation}.
+\vspace{1cm}
+Back to the notebook!
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{ 
+\frametitle{Conclusions}
+\footnotesize
+\begin{itemize}
+ \item Our results demonstrate that the mean of means method is our best baseline on our prediction task. 
+ \item We are able to obtain a significant decrease in RMSE using the PMF MAP estimate obtained via Powell optimization. 
+ \item We illustrated one way to monitor convergence of an MCMC sampler with a high-dimensionality sampling space 
+ \item The traceplots using this method seem to indicate that our sampler converged to the posterior.
+ \item Results using this posterior showed that attempting to improve the MAP estimation using MCMC sampling actually overfit the training data and increased test RMSE. This was likely caused by the constraining of the posterior via fixed precision parameters $\alpha$, $\alpha U$ and $\alpha V$.
+\end{itemize}
+
+\href{https://gist.github.com/macks22/00a17b1d374dfc267a9a}{this gist} is a working version of a fully Bayesian implementation.
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -330,22 +425,59 @@ One of the really nice things about probabilistic programming is that \highlt{yo
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \frame{ 
-\frametitle{Recommenders}
-\begin{block}{The example}
- We will be walking through the \href{https://pymc-devs.github.io/pymc3/notebooks/pmf-pymc.html}{PyMC3 PMF example}
+\frametitle{Neural Nets}
+\begin{block}{Thomas Wiecki}
+Has a \href{http://twiecki.github.io/blog/2016/06/01/bayesian-deep-learning/}{great blog post talking about exactly how to do this}
 \end{block}
 
-\begin{itemize}
- \item 
-\end{itemize}
+The notebook that is provided in this repo has not been significantly modified from  \href{https://github.com/twiecki/WhileMyMCMCGentlySamples/blob/master/content/downloads/notebooks/bayesian_neural_network.ipynb}{its original form}.  Although, check the original repository for the latest version.
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{
+\begin{center}
+\includegraphics[scale=0.5]{../notebooks/nn-0.png}
+\end{center}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{
+\begin{center}
+\includegraphics[scale=0.5]{../notebooks/nn-1.png}
+\end{center}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{
+\begin{center}
+\includegraphics[scale=0.5]{../notebooks/nn-2.png}
+\end{center}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \frame{ 
-\frametitle{woot}
-\begin{itemize}
- \item 
-\end{itemize}
+\frametitle{Another take on probabilistic programming}
+\footnotesize
+\begin{block}{}
+ Another way of thinking about this: unlike a traditional program, which only runs in the forward directions, \highlt{a probabilistic program is run in both the forward and backward direction}. It runs forward to compute the consequences of the assumptions it contains about the world (i.e., the model space it represents), but it also runs backward from the data to constrain the possible explanations. In practice, many probabilistic programming systems will cleverly interleave these forward and backward operations to efficiently home in on the best explanations.
+\end{block}
+\vspace{1cm}
+\href{https://plus.google.com/u/0/107971134877020469960/posts/KpeRdJKR6Z1}{Why Probabilistic Programming matters? (Beau Cronin)}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{   
+\frametitle{What did we cover again?}
+\begin{block}{}
+ \begin{itemize}
+  \item[\checkmark] Overview
+  \item[\checkmark] Coin-flip example
+  \item[\checkmark] Estimating the mean and standard deviation of a Normal
+  \item[\checkmark] Switchpoint analysis of text messages
+  \item[\checkmark] Probabilistic matrix factorization
+  \item[\checkmark] Probabilistic neural networks
+  \end{itemize}
+\end{block}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
