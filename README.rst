@@ -3,7 +3,7 @@ Introduction to probabilistics programming with PyMC3
 *******************************************************
 
 :Version: 1.0.0
-:Authors: Adam Richards
+:Authors: Galvanize DSI
 :Web site: https://github.com/zipfian/probabilistic-programming-intro
 :Copyright: This document has been placed in the public domain.
 :License: These materials are released under the BSD-3 license unless otherwise noted
