@@ -279,6 +279,33 @@ Now that we have an intuition for Bayesian inference and a general idea of what 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile]
+ \footnotesize
+ 
+ \begin{block}{Bayes Factor}
+  It is the \keywd{Bayesian way} to compare models.   This is done by computing the marginal likelihood of each model 
+  \begin{equation}
+  BF = \frac{p(y|M_{0})}{p(y|M_{1})}
+  \end{equation}
+  \highlt{Can be used to replace the p-value}
+ \end{block}
+
+ \begin{block}{Posterior predictive checks}
+  Analyze the degree to which data generated from the model deviate from data generated from the true distribution. Can by used for hypothesis testing, model comparison, model selection, model averaging and to validate test data.
+ \end{block}
+
+Links
+\begin{itemize}
+ \item \href{http://docs.pymc.io/notebooks/Bayes\_factor.html}{Bayes Factor in PyMC3}
+ \item \href{http://docs.pymc.io/notebooks/posterior\_predictive.html}{Posterior predictive checks in PyMC3}
+ \item \href{https://replicationindex.wordpress.com/2015/04/30/replacing-p-values-with-bayes-factors-a-miracle-cure-for-the-replicability-crisis-in-psychological-science/}{replacing p-values}
+ \item \href{http://docs.pymc.io/notebooks/BEST.html}{Bayesian estimation supersedes the t-test}
+\end{itemize}
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]
 \frametitle{PyMC3}
 \footnotesize
 \begin{code}
@@ -497,6 +524,7 @@ for hackers}
 \end{itemize}
 
 There is also \href{https://github.com/stan-dev/example-models/wiki}{PyStan} (\href{http://www.stat.columbia.edu/~gelman/research/unpublished/stan-resubmit-JSS1293.pdf}{Stan paper})
+And \href{https://github.com/blei-lab/edward}{Edward}.
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
