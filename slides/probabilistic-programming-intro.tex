@@ -88,10 +88,10 @@
 %% fix the section title for literature
 \renewcommand{\bibsection}{\subsubsection*{\bibname } }
 
-\title[Project teams]{Introduction to probabilistic programming \\ (with PyMC3)}
-\author[A. Richards]{A. Richards}
+\title[Project teams]{Introduction to probabilistic programming \\ (Introducing our new friend Edward)}
+\author[A. Richards]{Adam Richards \\ \ \\ \includegraphics[scale=0.05]{galvanize-logo.png}}
 \institute{}
-\date[]{02.08.2017}
+\date[]{01.04.2018}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
@@ -104,8 +104,24 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Introduction}
+\section{Probabilistic Programming}
 \subsection{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{   
+\frametitle{What are we going to cover?}
+\begin{block}{}
+ \begin{itemize}
+  \item Probabilistic programming intro 
+  \item Box's Loop (Model $\rightarrow$ infer $\rightarrow$ criticize)
+  \item Bayesian inference and some related tools
+  \item Examples in both PyMC3 and Edward (model)
+  \item Discuss the tools used for inference and criticism 
+  \item Switchpoint and multilevel modeling examples
+  \end{itemize}
+\end{block}
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \frame{   
 \frametitle{Probabilistic programming}
@@ -144,6 +160,62 @@
 \end{enumerate}
 }
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{
+\frametitle{Doing data science}
+\footnotesize
+The taxonomy of what a data scientist does
+\begin{columns}
+ 
+\begin{column}{6cm}
+\begin{enumerate}
+ \item Obtaining data
+ \item Scrubbing data
+ \item Exploring data
+ \item Modeling data
+ \item iNterpreting data
+\end{enumerate}
+\vspace{1cm}
+OSEMN is pronounced as \keywd{Awesome}.
+\end{column}
+\begin{column}{5cm}
+\begin{center}
+\includegraphics[scale=0.3]{data-decisions.pdf}
+\end{center}
+\end{column}
+\end{columns}
+
+
+\tiny
+\begin{flushleft}
+See Hilary Mason and Chris Wiggins blog post \\
+\href{http://www.dataists.com/2010/09/a-taxonomy-of-data-science}{http://www.dataists.com/2010/09/a-taxonomy-of-data-science}
+\end{flushleft}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{ 
+\frametitle{probabilistic programming and data science}
+\footnotesize
+\begin{columns}
+\begin{column}{5.5cm}
+\begin{center}
+\includegraphics[scale=0.3]{data-decisions.pdf}
+\end{center}
+\end{column}
+
+\begin{column}{5.5cm}
+\begin{center}
+\includegraphics[scale=0.35]{boxs-loop.png}
+\end{center}
+\end{column}
+\end{columns}
+\tiny
+\vspace{1cm}
+\citep{Tran16,Blei14}
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \frame{ 
 \frametitle{Bayesian Inference}
@@ -155,22 +227,29 @@ You are a skilled programmer, but bugs still slip into your code. After a partic
 \href{https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers}{Bayesian methods for hackers}
 \end{flushleft}
 
-This is \href{http://www.kdnuggets.com/2016/12/datascience-introduction-bayesian-inference.html}{a nice intro to Bayesian thinking done on kdnuggets (using PyMC3)}
+\begin{center}
+\includegraphics[scale=0.25]{bmh.jpeg}
+\end{center}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \frame{ 
 \frametitle{Some terminology}
 \footnotesize
+
+\begin{block}{Probabilistic model}
+A joint distribution $p(X, \theta)$ of data $X$ and latent variables $\theta$.
+\end{block}
+
 \begin{equation}
 P(\theta|x) = \frac{P(x|\theta)P(\theta)}{P(x)}
 \end{equation}
 
 \begin{itemize}
- \item \keywd{prior} - $P(\theta)$ - one's beliefs about a quantity before presented with evidence
- \item \keywd{posterior} - $P(\theta|x)$ - probability of the parameters given the evidence
- \item \keywd{likelihood} - $P(x|\theta)$  - probability of the evidence given the parameters
- \item \keywd{normalizing constant} - $P(x)$
+ \item \keywd{Prior} - $P(\theta)$ - one's beliefs about a quantity before presented with evidence
+ \item \keywd{Posterior} - $P(\theta|x)$ - probability of the parameters given the evidence
+ \item \keywd{Likelihood} - $P(x|\theta)$  - probability of the evidence given the parameters
+ \item \keywd{Normalizing constant} - $P(x)$
 \end{itemize}
 
 \begin{itemize}
@@ -179,17 +258,37 @@ P(\theta|x) = \frac{P(x|\theta)P(\theta)}{P(x)}
 \end{itemize}
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \frame{
+\frametitle{Related libraries and frameworks}
+Libraries with high level of abstraction...
 \begin{center}
-\includegraphics[scale=0.32]{coin_flip.png}
+Edward
+\includegraphics[scale=0.1]{edward.png} \hspace{1cm}
+\includegraphics[scale=0.3]{keras.png}
+\end{center}
+Computational framework libraries...
+\begin{center}
+\includegraphics[scale=0.3]{tensorflow.jpeg} \hspace{1cm}
+\includegraphics[scale=0.3]{theano.jpeg} \hspace{1cm}
+\includegraphics[scale=0.3]{torch.jpeg} 
 \end{center}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Warm up}
-\subsection{}
+\frame{
+\frametitle{The three main probabilistic programming libraries}
+\begin{center}
+Edward
+\includegraphics[scale=0.15]{edward.png} \hspace{1cm}
+\includegraphics[scale=0.35]{stan.jpeg} \hspace{1cm} \\ \ \\
+\includegraphics[scale=0.35]{pymc3.png}
+\end{center}
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Model,Inference,Criticism}
+\subsection{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile]
@@ -215,12 +314,120 @@ import pymc3 as pm
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]
+\frametitle{Edward}
+\footnotesize
+\begin{block}{}
+ Edward is named after the statistician \highlt{George Edward Pelham Box}. Its design is based on his philosophy of statistics
+\end{block}
+First gather data from some real-world phenomena. \ \\ 
+Then cycle through \highlt{Box’s loop}
+\begin{center}
+\includegraphics[scale=0.35]{boxs-loop.png}
+\end{center}
+\citep{Tran16}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]
+\frametitle{Generalized procedure for probabilistic programming}
+\footnotesize
+\begin{block}{Model,Inference,Criticism}
+\begin{enumerate}
+ \item Build a probabilistic model of the phenomena
+ \item Reason about the phenomena given model and data
+ \item Criticize the model, revise and repeat
+\end{enumerate}
+\end{block}
+
+A child flips a coin ten times...
+\begin{code}
+[0, 1, 0, 0, 0, 0, 0, 0, 0, 1]
+\end{code}
+
+\begin{enumerate}
+ \item She is interested in the probability that the coin lands on heads
+ \item Given she only see heads and tails she reason that a binomial distribution might be appropriate
+ \item She finally analyzes whether her model captures the real-world phenomenon of coin flips (she may revise the model
+and repeat)
+\end{enumerate}
+\citep{Tran16}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{
+\begin{center}
+\includegraphics[scale=0.32]{coin_flip.png}
+\end{center}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]
+\frametitle{Coin flip in PyMC3}
+\footnotesize
+\begin{code}
+import pymc3 as pm
+
+n,h,alpha,beta,niter = 100,61,2,2,1000
+
+# context management
+with pm.Model() as model: 
+    p = pm.Beta('p', alpha=alpha, beta=beta)
+    y = pm.Binomial('y', n=n, p=p, observed=h)
+
+    start = pm.find_MAP()
+    step = pm.Metropolis()
+    trace = pm.sample(niter, step, start)
+\end{code}
+
+Data $\rightarrow$ Model context $\rightarrow$ Priors $\rightarrow$ Likelihood $\rightarrow$ Sampler $\rightarrow$ Inference
+\vspace{0.5cm}
+\\ \noindent To the notebooks!
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]
+\frametitle{Bayesian Linear Regression}
+\scriptsize
+For a set of $N$ data points $(\mathbf{X},\mathbf{y})=\{(\mathbf{x}_n, y_n)\}$, the model can be specified as follows: 
+
+\begin{align}
+ p(\mathbf{w})                         &= Normal(\mathbf{w}|\mathbf{0},\sigma_{w}^{2} \mathbf{I})\\
+ p(b)                                  &= Normal(b|0,\sigma^{2}_{b}) \\
+ p(\mathbf{y}|\mathbf{w},b,\mathbf{X}) &= \prod^{N}_{n=1} Normal(y_{n}|\mathbf{x}_{n}^{T} \mathbf{w} + b,\sigma^{2}_{y})
+\end{align}
+
+\begin{itemize}
+ \item The latent variables are the linear model’s weights $\mathbf{w}$ and intercept $\mathbf{b}$
+ \item We assume the prior and likelihood variances are known: $\sigma_{w}^{2}$, $\sigma_{b}^{2}$ and $\sigma^{2}_{y}$
+ \item The mean of the likelihood is given by a linear transformation of the inputs in $\mathbf{x}_{n}$
+\end{itemize}
+\citep{Murphy12}
+\end{frame}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \frame{
+% \frametitle{Bayes linear regression in Edward}
+% \begin{center}
+% \includegraphics[scale=0.5]{../edward/bayes-linreg.png}
+% \end{center}
+% }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{
+\frametitle{Bayes linear regression in PyMC3}
+\begin{center}
+\includegraphics[scale=0.3]{../pymc3/bayes-lin-reg.png}
+\end{center}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \frame{
 \frametitle{Markov chain Monte Carlo (MCMC)}
 \footnotesize
 \keywd{MCMC}
 \begin{itemize}
- \item It is an family of algorithms for obtaining a sequence of random samples from a probability distribution for which direct sampling is difficult.
+ \item It is a family of algorithms for obtaining a sequence of random samples from a probability distribution for which direct sampling is difficult.
  \item The sequence can then be used to approximate the distribution
  \item It allows for inference on complex models
 \end{itemize}
@@ -236,45 +443,15 @@ One of the really nice things about probabilistic programming is that \highlt{yo
 \end{itemize}
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[fragile]
-\begin{block}{PyMC3 is an improvement over PyMC2}
-\begin{itemize}
- \item Intuitive model specification syntax e.g. \\
- \begin{equation*}
- x \sim N(0,1) \textrm{ becomes } x = \textrm{Normal}(0,1)
- \end{equation*}
- \item Powerful sampling algorithms such as the \href{http://arxiv.org/abs/1111.4246}{No U-Turn Sampler}
- \item \highlt{Variational inference}: \href{http://arxiv.org/abs/1506.03431}{ADVI} for fast approximate posterior estimation as well as \highlt{mini-batch} ADVI for large data sets.
- \item Relies on \href{http://deeplearning.net/software/theano}{Theano} which provides:
- \begin{itemize}
- \item Numpy broadcasting and advanced indexing
- \item Linear algebra operators
- \item Computation optimization and dynamic C compilation
- \item Simple extensibility
- \end{itemize}
- \item Transparent support for \highlt{missing value imputation}
-\end{itemize}
-\end{block}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\frame{ 
-\frametitle{Getting started}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{
+\frametitle{There are a lot of tools for inference available}
 \footnotesize
-
-\begin{block}{}
- We will be using probabilistic programming with PyMC3 to perform automatic Bayesian inference on user-defined probabilistic models
-\end{block}
-\vspace{0.5cm	}
-These are some of the best getting started resources out there
-\begin{itemize}
- \item \href{https://github.com/pymc-devs/pymc3}{PyMC3 repo}
- \item \href{http://pymc-devs.github.io/pymc3/notebooks/getting_started.html}{Getting started guide}
- \item \href{https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers}{Bayesian methods for hackers}
-\end{itemize}
-\vspace{0.5cm}
-Now that we have an intuition for Bayesian inference and a general idea of what to expect with PyMC3 lets dive in.
+\begin{center}
+\includegraphics[scale=0.4]{inference-graph.png}
+\end{center}
+%\vspace{1cm}
+\citep{Tran16}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -302,182 +479,117 @@ Links
 \end{itemize}
 \end{frame}
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Decisions, Decisions}
+\subsection{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile]
-\frametitle{PyMC3}
 \footnotesize
+\begin{block}{}
+We can never validate whether a model is true.
+\\ \ \\
+\keywd{In practice, all models are wrong -George Box}.
+\\ \ \\
+However, we can try to uncover where the model goes wrong. Model criticism helps justify the
+model as an approximation or point to good directions for revising the model.
+\end{block}
+\vspace{1cm}
+Posterior predictive checks (PPCs) analyze the degree to which data generated from the model deviate
+from data generated from the true distribution. They can be used either numerically to quantify this
+degree, or graphically to visualize this degree.
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]
+\footnotesize
+\frametitle{RMSE and MSE}
+Model evaluation has become so much easier...
+\vspace{1cm}
 \begin{code}
-import pymc3 as pm
-
-n,h,alpha,beta,niter = 100,61,2,2,1000
-
-# context management
-with pm.Model() as model: 
-    p = pm.Beta('p', alpha=alpha, beta=beta)
-    y = pm.Binomial('y', n=n, p=p, observed=h)
-
-    start = pm.find_MAP()
-    step = pm.Metropolis()
-    trace = pm.sample(niter, step, start)
+print("Mean squared error on test data:")
+print(ed.evaluate('MSE', data={X: X_test, y_post: y_test}))
 \end{code}
 
-Data $\rightarrow$ Model context $\rightarrow$ Priors $\rightarrow$ Likelihood $\rightarrow$ Sampler $\rightarrow$ Inference
-\vspace{0.5cm}
-\\ \noindent To the notebooks!
+\begin{code}
+print("Mean absolute error on test data:")
+print(ed.evaluate('MAE', data={X: X_test, y_post: y_test}))
+\end{code}
+\vspace{1cm}
+Note: RMSE gives a relatively high weight to large errors. This means the RMSE should be more useful when large errors are particularly undesirable.
 \end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\frame{   
-\frametitle{Where are we...}
-\begin{block}{}
- \begin{itemize}
-  \item[\checkmark] Overview
-  \item[\checkmark] Coin-flip example
-  \item[\checkmark] Estimating the mean and standard deviation of a Normal
-  \item[\checkmark] Switchpoint analysis of text messages
-  \end{itemize}
-\end{block}
-}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile]
-\frametitle{There are more examples..}
-\begin{block}{}
- But what about linear regression--the classical example??
+\begin{block}{Switchpoint analysis}
+\footnotesize
+\begin{itemize}
+ \item \href{http://nbviewer.jupyter.org/github/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/blob/master/Chapter1\_Introduction/Ch1\_Introduction\_PyMC3.ipynb}{Probabilistic Programming and Bayesian Methods for Hackers \\ Text Messages}
+ \item \href{http://docs.pymc.io/notebooks/getting_started.html}{PyMC3 Documentation \\ Coal Mining Disasters}
+\end{itemize}
 \end{block}
-
-The linear regression example \href{http://pymc-devs.github.io/pymc3/notebooks/getting_started.html}{is well explained in the docs}, but I did want to point out that we now have access to GLM style formulations in PyMC3.
-\vspace{1cm}
-\begin{code}
-import pymc3 as pm
-
-...
-
-data = dict(x=x, y=y)
-
-with pm.Model() as model:
-    pm.glm.glm('y ~ x', data)
-    step = pm.NUTS()
-    trace = pm.sample(2000, step, progressbar=True)
-\end{code}    
 \end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{PMF}
-\subsection{}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\frame{ 
-\frametitle{Recommenders}
-
-\begin{table}
-\begin{center}
-What will a user \textit{buy}, \textit{click}, \textit{like}...
-\end{center}
-\ \\ \ \\
-\begin{tabular}{|l|c|c|c|c|c|c|c|c|}
-\hline
-        & A  &  B & C & D & E & F & G & ... \\
-\hline        
-Frodo   & 1  &  ? & 2 & 1 & 1 & 4 & 1 & ... \\
-Sam     & ?  &  ? & 1 & 3 & ? & 3 & 1 & ... \\
-Merry   & ?  &  ? & 1 & 1 & ? & 1 & 1 & ... \\
-Gimli   & 1  &  1 & ? & 1 & ? & 1 & ? & ... \\
-Legolas & 1  &  1 & ? & 1 & ? & 1 & ? & ... \\
-\hline
-\end{tabular}
-\end{table}
-
+\begin{frame}[fragile]
+\frametitle{Switchpoint analysis applications}
+\begin{block}{}
 \begin{itemize}
- \item Ebay and Amazon who recommends items for purchase
- \item Movies, dating services, social network feeds, recipes, jokes, hikes, ...
+ \item Did the change actually happen?
+ \item Did change X on January 1 affect the number of sales we have seen in our company?
+ \item Did imposing a new safety policy last summer reduce the number of accidents?
+ \item After those staffing decisions how longs did it take before revenue was affected?
+ \item Based on my time-series forecasting model when will a change actually occur?
+ \item ...
 \end{itemize}
-}
+\end{block}
+\begin{block}{}
+If $p$-values are your tool of choice you could try Bayes Factors to have numeric values to make decisions from.
+\end{block}
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\frame{ 
-\footnotesize
-
-There are numerous types of recommender systems
-\begin{itemize}
- \item \keywd{Popularity} - Most viewed, most well-liked, not customized to users
- \item \keywd{User-User} - Recommend items liked by users with similar results
- \item \keywd{Item-Item} - Recommend items similar to what the current user rated favorably
- \item \keywd{Matrix-Factorization} - Estimate a users underlying preferences
-\end{itemize}
--------------------------------------------------------------------------------- \\
-Two of the most commonly implemented varieties are:
-\begin{itemize}
- \item \keywd{collaborative filtering} - Imagine that user 1 and user 2 both like the same 4 science fiction novels we can then infer that if user 1 also likes another similar novel then user 2 will have a good chance of also liking it.
- \item \keywd{Content-based recommender} - These systems also make use of extra features associated with the user
-\end{itemize}
-}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\frame{ 
-\frametitle{Probabilistic matrix factorization (PMF)}
-\footnotesize
-\begin{itemize}
- \item Probabilistic approach to the collaborative filtering problem that takes a Bayesian perspective \citep{Salakhutdinov08}.
- \item The ratings $R$ are modeled as draws from a Gaussian distribution
- \item We use precision $\alpha$, a fixed parameter, that reflects the uncertainty of the estimations; the normal distribution is commonly reparameterized in terms of precision, which is the inverse of the variance.
- \item small precision parameters help control the growth of our latent parameters
- \end{itemize}
-The following implementation is modified from the \href{https://pymc-devs.github.io/pymc3/notebooks/pmf-pymc.html}{example in the PyMC3 documentation}.
+\begin{frame}[fragile]
+\begin{block}{Multilevel modeling}
+Multilevel model. Multilevel models (also known as hierarchical linear models, nested data models, mixed models, random coefficient, random-effects models, random parameter models, or split-plot designs) are statistical models of parameters that vary at more than one level
+\end{block}
 \vspace{1cm}
-Back to the notebook!
-}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\frame{ 
-\frametitle{Conclusions}
-\footnotesize
 \begin{itemize}
- \item Our results demonstrate that the mean of means method is our best baseline on our prediction task. 
- \item We are able to obtain a significant decrease in RMSE using the PMF MAP estimate obtained via Powell optimization. 
- \item We illustrated one way to monitor convergence of an MCMC sampler with a high-dimensionality sampling space 
- \item The traceplots using this method seem to indicate that our sampler converged to the posterior.
- \item Results using this posterior showed that attempting to improve the MAP estimation using MCMC sampling actually overfit the training data and increased test RMSE. This was likely caused by the constraining of the posterior via fixed precision parameters $\alpha$, $\alpha U$ and $\alpha V$.
+ \item \href{http://twiecki.github.io/blog/2014/03/17/bayesian-glms-3/}{PyMC3 - Radon example GLM style}
+ \item \href{http://edwardlib.org/tutorials/linear-mixed-effects-models}{Edward - Instructor evaluation ratings}
 \end{itemize}
-
-\href{https://gist.github.com/macks22/00a17b1d374dfc267a9a}{this gist} is a working version of a fully Bayesian implementation.
-}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Cool down}
-\subsection{}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{1cm}
+\href{https://en.wikipedia.org/wiki/Multilevel\_model}{https://en.wikipedia.org/wiki/Multilevel\_model}
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\frame{ 
-\frametitle{Neural Nets}
-\begin{block}{Thomas Wiecki}
-Has a \href{http://twiecki.github.io/blog/2016/06/01/bayesian-deep-learning/}{great blog post talking about exactly how to do this}
+\begin{frame}[fragile]
+\frametitle{A note on deep learning...}
+\begin{enumerate}
+ \item Neural Networks compute point estimates
+ \item They tend to be overly confident about class prediction
+ \item They are prone to overfitting
+ \item They have many parameters that may require tuning
+\end{enumerate}
+
+\begin{block}{}
+ How confident am I in my prediction---can I quantify the uncertainty?
 \end{block}
 
-The notebook that is provided in this repo has not been significantly modified from  \href{https://github.com/twiecki/WhileMyMCMCGentlySamples/blob/master/content/downloads/notebooks/bayesian_neural_network.ipynb}{its original form}.  Although, check the original repository for the latest version.
-}
+\keywd{Bayesian neural network}: Is a neural network with a prior distribution on the weights
+
+\tiny
+\href{https://www.youtube.com/watch?v=I09QVNrUS3Q}{https://www.youtube.com/watch?v=I09QVNrUS3Q}
+\citep{Tran17}
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \frame{
+\frametitle{Simple Neural Network using PyMC3}
+\footnotesize
 \begin{center}
-\includegraphics[scale=0.5]{../notebooks/nn-0.png}
-\end{center}
-}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\frame{
-\begin{center}
-\includegraphics[scale=0.5]{../notebooks/nn-1.png}
-\end{center}
-}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\frame{
-\begin{center}
-\includegraphics[scale=0.5]{../notebooks/nn-2.png}
+\includegraphics[scale=0.2]{../pymc3/nn-1.png}
+\includegraphics[scale=0.2]{../pymc3/nn-2.png}
 \end{center}
 }
 
@@ -497,12 +609,12 @@ The notebook that is provided in this repo has not been significantly modified f
 \frametitle{What did we cover again?}
 \begin{block}{}
  \begin{itemize}
-  \item[\checkmark] Overview
-  \item[\checkmark] Coin-flip example
-  \item[\checkmark] Estimating the mean and standard deviation of a Normal
-  \item[\checkmark] Switchpoint analysis of text messages
-  \item[\checkmark] Probabilistic matrix factorization
-  \item[\checkmark] Probabilistic neural networks
+  \item[\checkmark] Probabilistic programming intro
+  \item[\checkmark] Box's Loop (Model $\rightarrow$ infer $\rightarrow$ criticize)
+  \item[\checkmark] Bayesian inference and some related tools
+  \item[\checkmark] Examples in both PyMC3 and Edward (model)
+  \item[\checkmark] Discuss the tools used for inference and criticism
+  \item[\checkmark] Switchpoint and multilevel modeling examples
   \end{itemize}
 \end{block}
 }
@@ -514,21 +626,37 @@ The notebook that is provided in this repo has not been significantly modified f
 
 Examples, examples, examples...
 \begin{itemize}
- \item \href{https://github.com/pymc-devs/pymc3}{PyMC3 repo}
- \item \href{http://pymc-devs.github.io/pymc3/notebooks/getting_started.html}{Getting started guide}
+ \item \href{http://edwardlib.org/tutorials/}{Edward examples}
+ \item \href{https://github.com/pymc-devs/pymc3}{PyMC3 examples}
+ \item \href{http://pymc-devs.github.io/pymc3/notebooks/getting_started.html}{PyMC3 Getting started guide}
  \item \href{https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers}{Bayesian methods 
 for hackers}
   \item \href{http://twiecki.github.io}{Blog by Thomas Wiecki}
   \item \href{http://www.amazon.com/Doing-Bayesian-Analysis-Second-Edition/dp/0124058884/ref=dp_ob_title_bk}{Doing Bayesian Data Analysis by John Kruschke}
   \item \href{https://github.com/markdregan/Bayesian-Modelling-in-Python}{Resource by Mark Dregan}
+  \item This is \href{http://www.kdnuggets.com/2016/12/datascience-introduction-bayesian-inference.html}{a nice intro to Bayesian thinking done on kdnuggets (using PyMC3)}
 \end{itemize}
 
 There is also \href{https://github.com/stan-dev/example-models/wiki}{PyStan} (\href{http://www.stat.columbia.edu/~gelman/research/unpublished/stan-resubmit-JSS1293.pdf}{Stan paper})
-And \href{https://github.com/blei-lab/edward}{Edward}.
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{
+\frametitle{Galvanize}
+\footnotesize
+\begin{block}{Upcoming events}
+ \begin{itemize}
+  \item \keywd{Essential Mathematical Foundations for Data Science} (January 08-10)
+  \item \keywd{Intro to Tableau for Data Science} (January 11th)
+  \item \keywd{Statistics short-course} (January 22-24)
+  \item \keywd{Intro to Python - Part time Course} (February-March)
+  \item \keywd{Data Science Immersive} (February-May)
+ \end{itemize}
+\end{block}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\frame[allowframebreaks]{  
+\frame[allowframebreaks]{
 \frametitle{References}
 \begin{tiny} \bibliography{pp.bib}
 \bibliographystyle{apalike}         % Style BST file
